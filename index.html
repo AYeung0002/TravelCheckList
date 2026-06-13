@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Packing List</title>
+    <!-- 引入 Tailwind CSS (Import Tailwind CSS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* * 自訂核取方塊與背景動畫樣式 
+         * Custom styles for checkboxes and background animations 
+         */
+        .item-checkbox:checked + span {
+            text-decoration: line-through;
+            color: #6b7280; /* text-gray-500 */
+        }
+        
+        /* 液態背景動畫 (Liquid background animation) */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+
+        /* 隱藏原生滾動條以配合玻璃質感 (Hide native scrollbar for aesthetics) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5); 
+        }
+    </style>
+</head>
+<!-- 設定漸層背景 (Set gradient background) -->
+<body class="bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 text-gray-900 font-sans min-h-screen pb-10 relative overflow-x-hidden">
+
+    <!-- 液態玻璃背景裝飾球 (Liquid glass background decorative blobs) -->
+    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob z-[-1]"></div>
+    <div class="fixed top-[20%] right-[-10%] w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000 z-[-1]"></div>
+    <div class="fixed bottom-[-20%] left-[20%] w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 z-[-1]"></div>
+
+    <div class="max-w-7xl mx-auto pt-10 px-4">
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-3 drop-shadow-sm">Travel Packing List</h1>
+            <p class="text-sm text-gray-600 font-medium bg-white/30 inline-block px-4 py-1 rounded-full backdrop-blur-sm border border-white/40 shadow-sm">
+                Data is automatically saved in your browser
+            </p>
+            <div class="mt-4">
+                <button onclick="resetToDefault()" class="text-sm text-red-500 hover:text-red-700 font-semibold bg-white/20 hover:bg-white/40 px-3 py-1 rounded-full backdrop-blur-sm border border-white/30 transition-all shadow-sm">
+                    Reset to Default
+                </button>
+            </div>
+        </header>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- 隨身行李區域 - 玻璃面板 (Carry-on Baggage Section - Glass Panel) -->
+            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-6 border border-white/50 relative overflow-hidden group">
+                <!-- 裝飾用頂部高亮邊緣 (Decorative top highlight edge) -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-cyan-300"></div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
+                        <span class="text-blue-500">🎒</span> Carry-on Baggage
+                    </h2>
+                    <button onclick="uncheckAll('carryOn')" class="px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
+                        Uncheck All
+                    </button>
+                </div>
+                <div id="carryOn-container" class="space-y-4"></div>
+                
+                <!-- 新增大類表單 (Add Category Form) -->
+                <div class="mt-8 pt-4 border-t border-white/40 flex gap-2">
+                    <input type="text" id="carryOn-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
+                    <button onclick="addCategory('carryOn')" class="bg-blue-500/80 hover:bg-blue-600/90 text-white font-medium px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-blue-400/50">Add</button>
+                </div>
+            </div>
+
+            <!-- 寄艙行李區域 - 玻璃面板 (Checked Baggage Section - Glass Panel) -->
+            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-6 border border-white/50 relative overflow-hidden">
+                <!-- 裝飾用頂部高亮邊緣 (Decorative top highlight edge) -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-300"></div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
+                        <span class="text-emerald-500">🧳</span> Checked Baggage
+                    </h2>
+                    <button onclick="uncheckAll('checked')" class="px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
+                        Uncheck All
+                    </button>
+                </div>
+                <div id="checked-container" class="space-y-4"></div>
+
+                <!-- 新增大類表單 (Add Category Form) -->
+                <div class="mt-8 pt-4 border-t border-white/40 flex gap-2">
+                    <input type="text" id="checked-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
+                    <button onclick="addCategory('checked')" class="bg-emerald-500/80 hover:bg-emerald-600/90 text-white font-medium px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-emerald-400/50">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 儲存金鑰 (Storage key)
+        const STORAGE_KEY = 'travel_packing_app_data';
+
+        // 預設資料 (Default JSON data) - 保持使用者的中文資料 (Kept Chinese keys for user data consistency)
+        const defaultJSON = {
+            "carryOn": {
+                "重要證件與財物": [
+                    { name: "護照", checked: false },
+                    { name: "護照複印本", checked: false },
+                    { name: "現金", checked: false },
+                    { name: "提款卡", checked: false },
+                    { name: "信用卡", checked: false },
+                    { name: "鎖匙", checked: false }
+                ],
+                "電子產品與配件": [
+                    { name: "電話", checked: false },
+                    { name: "相機", checked: false },
+                    { name: "SD 卡", checked: false },
+                    { name: "USB 充電線", checked: false },
+                    { name: "充電器", checked: false },
+                    { name: "行動電源", checked: false }
+                ],
+                "隨身醫藥與日常用品": [
+                    { name: "個人必備藥物", checked: false },
+                    { name: "UV 外套", checked: false },
+                    { name: "太陽眼鏡", checked: false },
+                    { name: "紙巾", checked: false },
+                    { name: "濕紙巾", checked: false }
+                ]
+            },
+            "checked": {
+                "衣物鞋襪": [
+                    { name: "衫褲", checked: false },
+                    { name: "底衫褲", checked: false },
+                    { name: "鞋", checked: false },
+                    { name: "襪", checked: false },
+                    { name: "拖鞋", checked: false }
+                ],
+                "盥洗、護膚與美髮": [
+                    { name: "護膚品", checked: false },
+                    { name: "防曬用品", checked: false },
+                    { name: "止汗劑", checked: false },
+                    { name: "吹風機", checked: false },
+                    { name: "牙刷", checked: false },
+                    { name: "梳", checked: false },
+                    { name: "定型凝膠", checked: false },
+                    { name: "定型噴霧", checked: false }
+                ],
+                "居家生活與床品": [
+                    { name: "床單", checked: false },
+                    { name: "床品", checked: false },
+                    { name: "毛巾", checked: false },
+                    { name: "面巾", checked: false },
+                    { name: "折疊衣架", checked: false },
+                    { name: "雨傘", checked: false }
+                ]
+            }
+        };
+
+        // 應用程式狀態 (Application state)
+        let appData = {};
+
+        // 初始化應用程式 (Initialize the application)
+        function init() {
+            const storedData = localStorage.getItem(STORAGE_KEY);
+            if (storedData) {
+                appData = JSON.parse(storedData);
+            } else {
+                appData = JSON.parse(JSON.stringify(defaultJSON)); // 深度複製 (Deep copy)
+            }
+            render();
+        }
+
+        // 重設為預設狀態 (Reset to default state)
+        function resetToDefault() {
+            if(confirm("Are you sure you want to reset? All custom items will be deleted.")) {
+                appData = JSON.parse(JSON.stringify(defaultJSON));
+                saveData();
+                render();
+            }
+        }
+
+        // 儲存至 LocalStorage (Save to LocalStorage)
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        // 防止 HTML 注入 (Prevent HTML injection)
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+        }
+
+        // 渲染畫面 (Render the UI)
+        function render() {
+            renderBag('carryOn', 'carryOn-container', 'checked');
+            renderBag('checked', 'checked-container', 'carryOn');
+        }
+
+        // 渲染單一行李區域 (Render a single baggage section)
+        function renderBag(bagId, containerId, targetSwapBag) {
+            const container = document.getElementById(containerId);
+            const categories = appData[bagId];
+            let html = '';
+
+            for (const [catName, items] of Object.entries(categories)) {
+                const escapedCatName = escapeHTML(catName);
+                const themeColor = bagId === 'carryOn' ? 'blue' : 'emerald';
+
+                html += `
+                    <div class="bg-white/40 backdrop-blur-md p-5 rounded-xl border border-white/50 shadow-sm transition-all hover:bg-white/50">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/40">
+                            <h3 class="font-bold text-lg text-gray-800 drop-shadow-sm">${escapedCatName}</h3>
+                            <div class="flex gap-2">
+                                <button onclick="swapCategory('${bagId}', '${targetSwapBag}', '${escapedCatName}')" 
+                                        title="Swap entire category"
+                                        class="text-xs flex items-center justify-center w-8 h-8 text-${themeColor}-700 hover:text-${themeColor}-900 bg-white/50 hover:bg-white/80 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
+                                    ⇄
+                                </button>
+                                <button onclick="deleteCategory('${bagId}', '${escapedCatName}')" 
+                                        title="Delete category"
+                                        class="text-xs flex items-center justify-center w-8 h-8 text-red-500 hover:text-red-700 bg-white/50 hover:bg-red-50 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <ul class="space-y-2 mb-4">
+                `;
+
+                items.forEach((item, index) => {
+                    const escapedItemName = escapeHTML(item.name);
+                    html += `
+                        <li class="flex items-center justify-between group p-2 rounded-lg hover:bg-white/40 transition-colors">
+                            <label class="flex items-center gap-3 cursor-pointer flex-1">
+                                <input type="checkbox" 
+                                       class="item-checkbox w-5 h-5 text-${themeColor}-500 bg-white/50 border-white/60 rounded focus:ring-${themeColor}-400/50 shadow-sm transition-all" 
+                                       ${item.checked ? 'checked' : ''} 
+                                       onchange="toggleItem('${bagId}', '${escapedCatName}', ${index})">
+                                <span class="text-gray-800 font-medium select-none drop-shadow-sm">${escapedItemName}</span>
+                            </label>
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/50 rounded-lg p-1 border border-white/60 shadow-sm backdrop-blur-sm">
+                                <button onclick="swapItem('${bagId}', '${targetSwapBag}', '${escapedCatName}', ${index})" 
+                                        title="Swap item"
+                                        class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-${themeColor}-600 rounded transition-colors">
+                                    ⇄
+                                </button>
+                                <button onclick="deleteItem('${bagId}', '${escapedCatName}', ${index})" 
+                                        title="Delete item"
+                                        class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-red-500 rounded transition-colors">
+                                    🗑️
+                                </button>
+                            </div>
+                        </li>
+                    `;
+                });
+
+                html += `
+                        </ul>
+                        <div class="flex gap-2 mt-3">
+                            <input type="text" id="new-item-${bagId}-${escapedCatName}" placeholder="Add new item..." class="flex-1 px-3 py-1.5 text-sm bg-white/50 border border-white/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-${themeColor}-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
+                            <button onclick="addItem('${bagId}', '${escapedCatName}')" class="bg-white/50 hover:bg-white/80 text-gray-700 font-medium px-4 py-1.5 rounded-lg text-sm backdrop-blur-sm border border-white/60 shadow-sm transition-all">Add</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (Object.keys(categories).length === 0) {
+                html = '<div class="bg-white/30 backdrop-blur-sm border border-white/40 rounded-xl p-8 text-center"><p class="text-gray-500 font-medium">No items in this section</p></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 切換物品狀態 (Toggle item checkbox state)
+        function toggleItem(bagId, catName, itemIndex) {
+            appData[bagId][catName][itemIndex].checked = !appData[bagId][catName][itemIndex].checked;
+            saveData();
+        }
+
+        // 清空特定行李的所有勾選 (Uncheck all items in a bag)
+        function uncheckAll(bagId) {
+            for (const catName in appData[bagId]) {
+                appData[bagId][catName].forEach(item => {
+                    item.checked = false;
+                });
+            }
+            saveData();
+            render();
+        }
+
+        // 新增大類 (Add a new category)
+        function addCategory(bagId) {
+            const inputEl = document.getElementById(`${bagId}-new-cat`);
+            const catName = inputEl.value.trim();
+            
+            if (!catName) return;
+
+            if (!appData[bagId][catName]) {
+                appData[bagId][catName] = [];
+                inputEl.value = '';
+                saveData();
+                render();
+            } else {
+                alert('Category already exists!');
+            }
+        }
+
+        // 新增物品 (Add a new item to a category)
+        function addItem(bagId, catName) {
+            const inputId = `new-item-${bagId}-${catName}`;
+            const inputEl = document.getElementById(inputId);
+            const itemName = inputEl.value.trim();
+
+            if (!itemName) return;
+
+            appData[bagId][catName].push({ name: itemName, checked: false });
+            inputEl.value = '';
+            saveData();
+            render();
+        }
+
+        // 刪除大類 (Delete a category)
+        function deleteCategory(bagId, catName) {
+            if(confirm(`Are you sure you want to delete the category "${catName}" and all its items?`)) {
+                delete appData[bagId][catName];
+                saveData();
+                render();
+            }
+        }
+
+        // 刪除物品 (Delete an item)
+        function deleteItem(bagId, catName, itemIndex) {
+            if(confirm('Are you sure you want to delete this item?')) {
+                appData[bagId][catName].splice(itemIndex, 1);
+                saveData();
+                render();
+            }
+        }
+
+        // 轉移整個大類 (Swap an entire category between bags)
+        function swapCategory(fromBag, toBag, catName) {
+            if (!appData[toBag][catName]) {
+                appData[toBag][catName] = [];
+            }
+            
+            // 合併物品 (Merge items)
+            appData[toBag][catName] = appData[toBag][catName].concat(appData[fromBag][catName]);
+            
+            // 從原來的行李中刪除 (Delete from origin bag)
+            delete appData[fromBag][catName];
+            
+            saveData();
+            render();
+        }
+
+        // 轉移單一物品 (Swap a single item between bags)
+        function swapItem(fromBag, toBag, catName, itemIndex) {
+            // 取出該物品 (Remove item from origin)
+            const item = appData[fromBag][catName].splice(itemIndex, 1)[0];
+
+            // 若目標行李中沒有該大類，則建立它 (Create category in target if it doesn't exist)
+            if (!appData[toBag][catName]) {
+                appData[toBag][catName] = [];
+            }
+
+            // 加入至目標行李 (Add to target)
+            appData[toBag][catName].push(item);
+            
+            saveData();
+            render();
+        }
+
+        // 啟動應用程式 (Boot the app)
+        window.onload = init;
+
+    </script>
+</body>
+</html>
