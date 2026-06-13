@@ -2,14 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 限制最大縮放比例與禁止使用者縮放 (Restrict max scale and disable user scaling for iOS) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Travel Packing List</title>
+    <!-- 加入 Checklist 的 Favicon (Add Checklist Favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%2310B981' d='M152.1 38.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.8 5.3-11.2 8.6-18.3 9.4s-14.1-1.6-19.5-6.5l-24-22C10.4 122.3 9.4 107.1 18.3 96.4s24-10.7 34.8-1.8l9.6 8.8 55.5-61.7c8.9-9.9 24-10.7 33.9-1.8zM224 96c0-17.7 14.3-32 32-32h224c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h224c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zm0 160c0-17.7 14.3-32 32-32h224c17.7 0 32 14.3 32 32s-14.3 32-32 32H256c-17.7 0-32-14.3-32-32zM152.1 198.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.8 5.3-11.2 8.6-18.3 9.4s-14.1-1.6-19.5-6.5l-24-22c-10.8-9.9-11.7-25.1-2.8-35.9s24-10.7 34.8-1.8l9.6 8.8 55.5-61.7c8.9-9.9 24-10.7 33.9-1.8zM152.1 358.2c9.9 8.9 10.7 24 1.8 33.9l-72 80c-4.8 5.3-11.2 8.6-18.3 9.4s-14.1-1.6-19.5-6.5l-24-22c-10.8-9.9-11.7-25.1-2.8-35.9s24-10.7 34.8-1.8l9.6 8.8 55.5-61.7c8.9-9.9 24-10.7 33.9-1.8z'/></svg>">
     <!-- 引入 Tailwind CSS (Import Tailwind CSS) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* * 自訂核取方塊與背景動畫樣式 
          * Custom styles for checkboxes and background animations 
          */
+         
+        /* 防止 iOS 手勢縮放與雙擊放大 (Prevent iOS gesture zoom and double-tap zoom) */
+        * {
+            touch-action: manipulation;
+        }
+        
+        /* 強制輸入框字體為 16px，防止 iOS 點擊聚焦時自動放大 (Force 16px font on inputs to prevent iOS auto-zoom on focus) */
+        input[type="text"] {
+            font-size: 16px !important;
+        }
+
         .item-checkbox:checked + span {
             text-decoration: line-through;
             color: #6b7280; /* text-gray-500 */
@@ -56,9 +70,10 @@
     <div class="fixed top-[20%] right-[-10%] w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000 z-[-1]"></div>
     <div class="fixed bottom-[-20%] left-[20%] w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 z-[-1]"></div>
 
-    <div class="max-w-7xl mx-auto pt-10 px-4">
-        <header class="mb-10 text-center">
-            <h1 class="text-4xl font-extrabold text-gray-800 mb-3 drop-shadow-sm">Travel Packing List</h1>
+    <!-- 縮小手機版的外距與內距 (Reduce margin and padding on mobile devices) -->
+    <div class="max-w-7xl mx-auto pt-4 md:pt-10 px-2 md:px-4">
+        <header class="mb-6 md:mb-10 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-3 drop-shadow-sm">Travel Packing List</h1>
             <p class="text-sm text-gray-600 font-medium bg-white/30 inline-block px-4 py-1 rounded-full backdrop-blur-sm border border-white/40 shadow-sm">
                 Data is automatically saved in your browser
             </p>
@@ -69,48 +84,49 @@
             </div>
         </header>
 
-        <div class="flex flex-col lg:flex-row gap-8">
+        <!-- 縮小手機版的區塊間距 (Reduce gap between sections on mobile) -->
+        <div class="flex flex-col lg:flex-row gap-4 md:gap-8">
             <!-- 隨身行李區域 - 玻璃面板 (Carry-on Baggage Section - Glass Panel) -->
-            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-6 border border-white/50 relative overflow-hidden group">
+            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-4 md:p-6 border border-white/50 relative overflow-hidden group">
                 <!-- 裝飾用頂部高亮邊緣 (Decorative top highlight edge) -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-cyan-300"></div>
                 
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
                         <span class="text-blue-500">🎒</span> Carry-on Baggage
                     </h2>
-                    <button onclick="uncheckAll('carryOn')" class="px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
+                    <button onclick="uncheckAll('carryOn')" class="px-3 md:px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
                         Uncheck All
                     </button>
                 </div>
                 <div id="carryOn-container" class="space-y-4"></div>
                 
                 <!-- 新增大類表單 (Add Category Form) -->
-                <div class="mt-8 pt-4 border-t border-white/40 flex gap-2">
-                    <input type="text" id="carryOn-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
-                    <button onclick="addCategory('carryOn')" class="bg-blue-500/80 hover:bg-blue-600/90 text-white font-medium px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-blue-400/50">Add</button>
+                <div class="mt-6 md:mt-8 pt-4 border-t border-white/40 flex gap-2">
+                    <input type="text" id="carryOn-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all text-base">
+                    <button onclick="addCategory('carryOn')" class="bg-blue-500/80 hover:bg-blue-600/90 text-white font-medium px-4 md:px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-blue-400/50">Add</button>
                 </div>
             </div>
 
             <!-- 寄艙行李區域 - 玻璃面板 (Checked Baggage Section - Glass Panel) -->
-            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-6 border border-white/50 relative overflow-hidden">
+            <div class="flex-1 bg-white/40 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] p-4 md:p-6 border border-white/50 relative overflow-hidden">
                 <!-- 裝飾用頂部高亮邊緣 (Decorative top highlight edge) -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-teal-300"></div>
 
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 drop-shadow-sm flex items-center gap-2">
                         <span class="text-emerald-500">🧳</span> Checked Baggage
                     </h2>
-                    <button onclick="uncheckAll('checked')" class="px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
+                    <button onclick="uncheckAll('checked')" class="px-3 md:px-4 py-1.5 bg-white/50 hover:bg-white/70 text-gray-700 font-medium rounded-lg text-sm transition-all border border-white/60 shadow-sm">
                         Uncheck All
                     </button>
                 </div>
                 <div id="checked-container" class="space-y-4"></div>
 
                 <!-- 新增大類表單 (Add Category Form) -->
-                <div class="mt-8 pt-4 border-t border-white/40 flex gap-2">
-                    <input type="text" id="checked-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
-                    <button onclick="addCategory('checked')" class="bg-emerald-500/80 hover:bg-emerald-600/90 text-white font-medium px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-emerald-400/50">Add</button>
+                <div class="mt-6 md:mt-8 pt-4 border-t border-white/40 flex gap-2">
+                    <input type="text" id="checked-new-cat" placeholder="New category name..." class="flex-1 px-4 py-2 bg-white/50 border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all text-base">
+                    <button onclick="addCategory('checked')" class="bg-emerald-500/80 hover:bg-emerald-600/90 text-white font-medium px-4 md:px-5 py-2 rounded-xl backdrop-blur-sm shadow-md transition-all border border-emerald-400/50">Add</button>
                 </div>
             </div>
         </div>
@@ -227,19 +243,20 @@
                 const escapedCatName = escapeHTML(catName);
                 const themeColor = bagId === 'carryOn' ? 'blue' : 'emerald';
 
+                // 針對手機版優化內距、文字大小與按鈕顯示狀態 (Optimize padding, text size, and button visibility for mobile)
                 html += `
-                    <div class="bg-white/40 backdrop-blur-md p-5 rounded-xl border border-white/50 shadow-sm transition-all hover:bg-white/50">
+                    <div class="bg-white/40 backdrop-blur-md p-3 md:p-5 rounded-xl border border-white/50 shadow-sm transition-all hover:bg-white/50">
                         <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/40">
-                            <h3 class="font-bold text-lg text-gray-800 drop-shadow-sm">${escapedCatName}</h3>
-                            <div class="flex gap-2">
+                            <h3 class="font-bold text-base md:text-lg text-gray-800 drop-shadow-sm">${escapedCatName}</h3>
+                            <div class="flex gap-1 md:gap-2">
                                 <button onclick="swapCategory('${bagId}', '${targetSwapBag}', '${escapedCatName}')" 
                                         title="Swap entire category"
-                                        class="text-xs flex items-center justify-center w-8 h-8 text-${themeColor}-700 hover:text-${themeColor}-900 bg-white/50 hover:bg-white/80 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
+                                        class="text-xs flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-${themeColor}-700 hover:text-${themeColor}-900 bg-white/50 hover:bg-white/80 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
                                     ⇄
                                 </button>
                                 <button onclick="deleteCategory('${bagId}', '${escapedCatName}')" 
                                         title="Delete category"
-                                        class="text-xs flex items-center justify-center w-8 h-8 text-red-500 hover:text-red-700 bg-white/50 hover:bg-red-50 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
+                                        class="text-xs flex items-center justify-center w-7 h-7 md:w-8 md:h-8 text-red-500 hover:text-red-700 bg-white/50 hover:bg-red-50 rounded-full backdrop-blur-sm border border-white/60 shadow-sm transition-all">
                                     🗑️
                                 </button>
                             </div>
@@ -251,15 +268,16 @@
                 items.forEach((item, index) => {
                     const escapedItemName = escapeHTML(item.name);
                     html += `
-                        <li class="flex items-center justify-between group p-2 rounded-lg hover:bg-white/40 transition-colors">
-                            <label class="flex items-center gap-3 cursor-pointer flex-1">
+                        <li class="flex items-center justify-between group p-1 md:p-2 rounded-lg hover:bg-white/40 transition-colors">
+                            <label class="flex items-center gap-2 md:gap-3 cursor-pointer flex-1">
                                 <input type="checkbox" 
                                        class="item-checkbox w-5 h-5 text-${themeColor}-500 bg-white/50 border-white/60 rounded focus:ring-${themeColor}-400/50 shadow-sm transition-all" 
                                        ${item.checked ? 'checked' : ''} 
                                        onchange="toggleItem('${bagId}', '${escapedCatName}', ${index})">
-                                <span class="text-gray-800 font-medium select-none drop-shadow-sm">${escapedItemName}</span>
+                                <span class="text-gray-800 font-medium select-none drop-shadow-sm text-sm md:text-base">${escapedItemName}</span>
                             </label>
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/50 rounded-lg p-1 border border-white/60 shadow-sm backdrop-blur-sm">
+                            <!-- 在手機版預設顯示操作按鈕，避免觸控無法 Hover (Show action buttons by default on mobile) -->
+                            <div class="opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity flex gap-1 bg-white/50 rounded-lg p-1 border border-white/60 shadow-sm backdrop-blur-sm">
                                 <button onclick="swapItem('${bagId}', '${targetSwapBag}', '${escapedCatName}', ${index})" 
                                         title="Swap item"
                                         class="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-${themeColor}-600 rounded transition-colors">
@@ -278,8 +296,8 @@
                 html += `
                         </ul>
                         <div class="flex gap-2 mt-3">
-                            <input type="text" id="new-item-${bagId}-${escapedCatName}" placeholder="Add new item..." class="flex-1 px-3 py-1.5 text-sm bg-white/50 border border-white/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-${themeColor}-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
-                            <button onclick="addItem('${bagId}', '${escapedCatName}')" class="bg-white/50 hover:bg-white/80 text-gray-700 font-medium px-4 py-1.5 rounded-lg text-sm backdrop-blur-sm border border-white/60 shadow-sm transition-all">Add</button>
+                            <input type="text" id="new-item-${bagId}-${escapedCatName}" placeholder="Add new item..." class="flex-1 px-3 py-1.5 text-base bg-white/50 border border-white/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-${themeColor}-400/50 focus:bg-white/70 shadow-inner placeholder-gray-500 transition-all">
+                            <button onclick="addItem('${bagId}', '${escapedCatName}')" class="bg-white/50 hover:bg-white/80 text-gray-700 font-medium px-4 py-1.5 rounded-lg text-sm md:text-base backdrop-blur-sm border border-white/60 shadow-sm transition-all">Add</button>
                         </div>
                     </div>
                 `;
